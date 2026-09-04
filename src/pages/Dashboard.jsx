@@ -89,7 +89,7 @@ function Dashboard() {
 
   const handleLogout = () => {
     localStorage.setItem("isLoggedIn", "false");
-    navigate("/login", { replace: true });
+    navigate("/", { replace: true });
   };
 
   return (
