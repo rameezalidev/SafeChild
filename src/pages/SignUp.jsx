@@ -61,7 +61,7 @@ function SignUp() {
     localStorage.setItem("user", JSON.stringify(newUser));
     localStorage.setItem("isLoggedIn", "false");
     alert("Account created successfully! Please login.");
-    navigate("/login");
+    navigate("/");
   }
 
   return (
