@@ -1,0 +1,141 @@
+:root {
+  --safechild-bg: #fff7ed;
+  --safechild-panel: #ffffff;
+  --safechild-panel-soft: #fffaf4;
+  --safechild-primary: #f59e0b;
+  --safechild-primary-strong: #d97706;
+  --safechild-border: rgba(148, 163, 184, 0.28);
+  --safechild-text: #1f2937;
+  --safechild-muted: #6b7280;
+  --safechild-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fff7ed 0%, #fffdf9 100%);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--safechild-text);
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  width: min(420px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 28px 26px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(245, 158, 11, 0.12);
+  border-radius: 24px;
+  box-shadow: var(--safechild-shadow);
+}
+
+.container .header {
+  margin-bottom: 18px;
+}
+
+.container .header h2:first-child {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--safechild-text);
+  margin-bottom: 6px;
+}
+
+.container .header h2:first-child span {
+  color: var(--safechild-primary);
+}
+
+.container .header h2:nth-child(2) {
+  font-size: 1.8rem;
+  margin: 10px 0 8px;
+  color: var(--safechild-text);
+}
+
+.container .header p {
+  color: var(--safechild-muted);
+  font-size: 0.95rem;
+}
+
+.container .content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.container .content input,
+.container button {
+  width: 100%;
+  border-radius: 12px;
+  font-size: 0.98rem;
+}
+
+.container .content input {
+  padding: 12px 14px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: #fff;
+  color: var(--safechild-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.container .content input:focus {
+  outline: none;
+  border-color: rgba(245, 158, 11, 0.7);
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+}
+
+.container button {
+  padding: 12px 16px;
+  border: none;
+  background: linear-gradient(135deg, var(--safechild-primary) 0%, var(--safechild-primary-strong) 100%);
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(245, 158, 11, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.container button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(245, 158, 11, 0.24);
+}
+
+.container hr {
+  border: none;
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
+  margin: 16px 0;
+}
+
+.container .footer p {
+  color: var(--safechild-muted);
+  font-size: 0.95rem;
+}
+
+.container .footer span {
+  margin-left: 6px;
+}
+
+.container .footer a {
+  color: var(--safechild-primary-strong);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.container .footer a:hover {
+  text-decoration: underline;
+}
