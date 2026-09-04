@@ -2,6 +2,11 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import { useState } from "react";
 
+function getUsers() {
+  const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+  return Array.isArray(storedUsers) ? storedUsers : [];
+}
+
 function Login() {
   const navigate = useNavigate();
 
@@ -11,21 +16,24 @@ function Login() {
   function handleSubmit(e) {
     e.preventDefault();
 
+    const users = getUsers();
+    const foundUser = users.find(
+      (user) => user.email?.toLowerCase() === email.trim().toLowerCase() && user.password === password
+    );
 
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    if (!user) {
+    if (!users.length) {
       alert("No account found. Please signup first.");
       return;
     }
 
-    if (email === user.email && password === user.password) {
+    if (foundUser) {
       localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("loggedInUser", foundUser.email);
       navigate("/dashboard");
-    } else {
-
-      alert("Invalid email or password");
+      return;
     }
+
+    alert("Invalid email or password");
   }
 
   return (
@@ -44,7 +52,7 @@ function Login() {
           type="email"
           name="email"
           placeholder="Enter email..."
-          onChange={(e)=>setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           value={email}
           required
         />
@@ -53,7 +61,7 @@ function Login() {
           type="password"
           name="password"
           placeholder="Enter password..."
-          onChange={(e)=>setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           value={password}
           required
         />

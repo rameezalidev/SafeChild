@@ -9,6 +9,11 @@ const emptyForm = {
   info: "",
 };
 
+function getUsers() {
+  const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+  return Array.isArray(storedUsers) ? storedUsers : [];
+}
+
 function Dashboard() {
   const navigate = useNavigate();
   const [children, setChildren] = useState([]);
@@ -19,14 +24,22 @@ function Dashboard() {
     const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
     if (!isLoggedIn) {
-      navigate("/login", { replace: true });
+      navigate("/", { replace: true });
       return;
     }
 
-    const user = JSON.parse(localStorage.getItem("user") || "null");
-    const key = user?.email ? `children_${user.email}` : "children_default";
-    const storedChildren = JSON.parse(localStorage.getItem(key) || "[]");
-    setChildren(Array.isArray(storedChildren) ? storedChildren : []);
+    const loggedEmail = localStorage.getItem("loggedInUser") || "";
+    const users = getUsers();
+    const currentUser = users.find((user) => user.email?.toLowerCase() === loggedEmail.toLowerCase());
+
+    if (!currentUser) {
+      localStorage.setItem("isLoggedIn", "false");
+      localStorage.setItem("loggedInUser", "");
+      navigate("/", { replace: true });
+      return;
+    }
+
+    setChildren(Array.isArray(currentUser.children) ? currentUser.children : []);
   }, [navigate]);
 
   const handleChange = (e) => {
@@ -42,8 +55,15 @@ function Dashboard() {
       return;
     }
 
-    const user = JSON.parse(localStorage.getItem("user") || "null");
-    const key = user?.email ? `children_${user.email}` : "children_default";
+    const loggedEmail = localStorage.getItem("loggedInUser") || "";
+    const users = getUsers();
+    const currentUserIndex = users.findIndex((user) => user.email?.toLowerCase() === loggedEmail.toLowerCase());
+
+    if (currentUserIndex === -1) {
+      alert("User session not found. Please login again.");
+      navigate("/", { replace: true });
+      return;
+    }
 
     const child = {
       id: editingId || Date.now().toString(),
@@ -57,8 +77,10 @@ function Dashboard() {
       ? children.map((item) => (item.id === editingId ? { ...item, ...child } : item))
       : [...children, child];
 
+    users[currentUserIndex].children = updatedChildren;
+    localStorage.setItem("users", JSON.stringify(users));
+
     setChildren(updatedChildren);
-    localStorage.setItem(key, JSON.stringify(updatedChildren));
     setForm(emptyForm);
     setEditingId(null);
   };
@@ -74,12 +96,18 @@ function Dashboard() {
   };
 
   const handleDelete = (id) => {
-    const user = JSON.parse(localStorage.getItem("user") || "null");
-    const key = user?.email ? `children_${user.email}` : "children_default";
-    const updatedChildren = children.filter((child) => child.id !== id);
+    const loggedEmail = localStorage.getItem("loggedInUser") || "";
+    const users = getUsers();
+    const currentUserIndex = users.findIndex((user) => user.email?.toLowerCase() === loggedEmail.toLowerCase());
 
+    if (currentUserIndex === -1) {
+      return;
+    }
+
+    const updatedChildren = children.filter((child) => child.id !== id);
+    users[currentUserIndex].children = updatedChildren;
+    localStorage.setItem("users", JSON.stringify(users));
     setChildren(updatedChildren);
-    localStorage.setItem(key, JSON.stringify(updatedChildren));
 
     if (editingId === id) {
       setEditingId(null);
@@ -89,6 +117,7 @@ function Dashboard() {
 
   const handleLogout = () => {
     localStorage.setItem("isLoggedIn", "false");
+    localStorage.setItem("loggedInUser", "");
     navigate("/", { replace: true });
   };
 

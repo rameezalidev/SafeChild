@@ -40,6 +40,11 @@ function reducer(state, action) {
   }
 }
 
+function getUsers() {
+  const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+  return Array.isArray(storedUsers) ? storedUsers : [];
+}
+
 function SignUp() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const navigate = useNavigate();
@@ -52,14 +57,26 @@ function SignUp() {
       return;
     }
 
+    const trimmedEmail = state.email.trim().toLowerCase();
+    const users = getUsers();
+    const emailExists = users.some((user) => user.email?.toLowerCase() === trimmedEmail);
+
+    if (emailExists) {
+      alert("An account with this email already exists.");
+      return;
+    }
+
     const newUser = {
-      email: state.email,
+      email: trimmedEmail,
       password: state.password,
-      emergencyContact: state.emergencyContact,
+      emergencyContact: state.emergencyContact.trim(),
+      children: [],
     };
 
-    localStorage.setItem("user", JSON.stringify(newUser));
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
     localStorage.setItem("isLoggedIn", "false");
+    localStorage.setItem("loggedInUser", "");
     alert("Account created successfully! Please login.");
     navigate("/");
   }
